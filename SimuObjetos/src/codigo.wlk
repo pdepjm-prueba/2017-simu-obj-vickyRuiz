@@ -1,13 +1,19 @@
 //Consejos: leer todo el parcial + anotar relaciones entre cosas en papel + empezar a trabajar en codigo
 //No dejar clases desconectadas en diagrama (ergo en codigo tampoco)
+//los wko se representan, pero no las instancias de clase
+//solo va a haber 3 tests, uno con una excepcion seguramente!
+//No romper encapsulamiento de objetos
+//No pensar demasiado en los errores, avanzar y demostrar lo que sabemos
+
 import frutas.*
 import roles.* 
 
 class Empleado {
 	var rol //soldado, obrero, mucama (puede cambiar)
 	var estamina
-	var sumatoriaDificultades = 0
-	var tareasRealizadas = 0
+
+	var tareasRealizadas = []
+	
 	const dificultadLimpiar = 10
 	
 	constructor(_rol, _estamina) {
@@ -19,57 +25,49 @@ class Empleado {
 	method estamina(_estamina) {
 		estamina = _estamina
 	}
+	method factorDefensa() = 1
+	
 	method fuerza() = estamina/2 + 2 + rol.danioExtra()
+	
 	//method tieneHerramientasNecesarias(_herramientas) = rol.tieneHerramientasNecesarias(_herramientas)
 	method experienciaPorDefender(gradoAmenaza) = gradoAmenaza
-	method defender(_gradoAmenaza) {
-		if (rol.puedeDefender() && self.fuerza() >= _gradoAmenaza) {
-			self.estamina(estamina - rol.defenderVariacionEstamina(estamina))
-			sumatoriaDificultades += self.experienciaPorDefender(_gradoAmenaza)
-			tareasRealizadas++
-		} else {
-			//que hago acá si no se pudo completar? excepcion?
-		}
-	} 
-	
-	method arreglarMaquina(maquina) {
-		if(estamina > maquina.complejidad() && rol.tieneHerramientasNecesarias(maquina.herramientasRequeridas()) ) {
-			self.estamina(estamina - maquina.complejidad())
-			sumatoriaDificultades += maquina.complejidad() * 2
-			tareasRealizadas++ 
-		} else {
-			//No puede realizar la tarea... entonces?
-		}
-	}	
-	
-	method limpiarSector(sectorEsGrande) {
-		//dificultadLimpiar = 10
-		if (rol.puedeLimpiar(sectorEsGrande, self)) {
-			self.estamina( estamina - rol.limpiarVariacionEstima(sectorEsGrande))
-			sumatoriaDificultades += dificultadLimpiar
-			tareasRealizadas++
-		} else {
-			//no se puede hacer
-		}		
+	 
+	method tieneHerramientas(herramientasNecesarias) {
+		rol.tieneHerramientasNecesarias(herramientasNecesarias)
 	}
+	method puedeDefender() = rol.puedeDefender()
+	
+	method hacerTarea(tarea) {
+		if (not tarea.puedeHacerla(self)) {
+			throw error
+		}
+		tareasRealizadas.add(tarea)
+		tarea.serEjecutadaPor(self)
+		
+	}
+		
 	// Punto 1.
 	method comerFruta(fruta) {
 		estamina += fruta.estaminaOtorgada()
 	}
 	//Punto 2.
-	method experiencia() = sumatoriaDificultades * tareasRealizadas
+	method experiencia() = tareasRealizadas.size() * tareasRealizadas.sum({tarea => tarea.dificultad()})
 }
 
 class Biclope inherits Empleado {
-
 	const maxEstamina = 10
 	override method estamina(_estamina) {
 		estamina = _estamina.min(maxEstamina)		
 	}	
+	
 }
-class Ciclope inherits Empleado {	
+class Ciclope inherits Empleado {
+	override method factorDefensa() = 2
+		
 	override method experienciaPorDefender(gradoAmenaza) = gradoAmenaza * 2
-	override method fuerza() = super().fuerza() / 2
+	override method fuerza() = super()/ 2 //No necesito agregar super().fuerza()
+	
+	
 }
 
 class Maquina {

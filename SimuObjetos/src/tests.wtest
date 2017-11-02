@@ -1,15 +1,14 @@
 // Acá los tests
 import codigo.*
 import frutas.*
+import roles.*
 
-describe "Punto 1 - Comer fruta" {
+describe "Punto 1 - Comer fruta" { 
 	
-	const kevin = new Empleado(new Soldado(), 0)
+	const kevin = new Ciclope(new Soldado(), 0) //Empleado es abstracta!
 	
 	test "Comer una manzana le da 5 de estamina a Kevin" {
 		kevin.comerFruta(manzana)
 		assert.equals(5, kevin.estamina())	
 	}
-	
-
 }

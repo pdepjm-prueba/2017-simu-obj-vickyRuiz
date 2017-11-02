@@ -1,5 +1,6 @@
 class Rol {
 	method tieneHerramientasNecesarias(_herramientas) = _herramientas.size() == 0
+	method puedeDefender() = true
 	method danioExtra() = 0
 	method defenderVariacionEstamina(estamina) = estamina/2
 	method puedeLimpiar(sectorEsGrande, empleado) = (sectorEsGrande && empleado.estamina() >= 4) || (!sectorEsGrande && empleado.estamina() >= 1)
@@ -19,7 +20,7 @@ class Soldado inherits Rol {
 
 }
 class Mucama inherits Rol {
-	method puedeDefender() = false
+	override method puedeDefender() = false
 	override method puedeLimpiar(sectorEsGrande, empleado) = true 
 }
 class Obrero inherits Rol {
