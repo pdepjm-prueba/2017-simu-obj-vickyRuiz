@@ -1,10 +1,19 @@
-/** Acá el código del simulacro */
+//Consejos: leer todo el parcial + anotar relaciones entre cosas en papel + empezar a trabajar en codigo
+//No dejar clases desconectadas en diagrama (ergo en codigo tampoco)
+import frutas.*
+import roles.* 
+
 class Empleado {
 	var rol //soldado, obrero, mucama (puede cambiar)
 	var estamina
 	var sumatoriaDificultades = 0
 	var tareasRealizadas = 0
 	const dificultadLimpiar = 10
+	
+	constructor(_rol, _estamina) {
+		rol = _rol
+		estamina = _estamina
+	}
 	
 	method estamina() = estamina
 	method estamina(_estamina) {
@@ -15,7 +24,7 @@ class Empleado {
 	method experienciaPorDefender(gradoAmenaza) = gradoAmenaza
 	method defender(_gradoAmenaza) {
 		if (rol.puedeDefender() && self.fuerza() >= _gradoAmenaza) {
-			estamina -= rol.defenderVariacionEstamina(estamina)
+			self.estamina(estamina - rol.defenderVariacionEstamina(estamina))
 			sumatoriaDificultades += self.experienciaPorDefender(_gradoAmenaza)
 			tareasRealizadas++
 		} else {
@@ -25,7 +34,7 @@ class Empleado {
 	
 	method arreglarMaquina(maquina) {
 		if(estamina > maquina.complejidad() && rol.tieneHerramientasNecesarias(maquina.herramientasRequeridas()) ) {
-			estamina -= maquina.complejidad()
+			self.estamina(estamina - maquina.complejidad())
 			sumatoriaDificultades += maquina.complejidad() * 2
 			tareasRealizadas++ 
 		} else {
@@ -36,79 +45,31 @@ class Empleado {
 	method limpiarSector(sectorEsGrande) {
 		//dificultadLimpiar = 10
 		if (rol.puedeLimpiar(sectorEsGrande, self)) {
-			estamina -= rol.limpiarVariacionEstima(sectorEsGrande)
+			self.estamina( estamina - rol.limpiarVariacionEstima(sectorEsGrande))
 			sumatoriaDificultades += dificultadLimpiar
 			tareasRealizadas++
-		}
-			
+		} else {
+			//no se puede hacer
+		}		
 	}
-
-	
+	// Punto 1.
 	method comerFruta(fruta) {
 		estamina += fruta.estaminaOtorgada()
 	}
+	//Punto 2.
 	method experiencia() = sumatoriaDificultades * tareasRealizadas
 }
 
-object banana {
-	method estaminaOtorgada() = 10
-}
-object manzana {
-	method estaminaOtorgada() = 5
-}
-object uva {
-	method estaminaOtorgada() = 1
-}
 class Biclope inherits Empleado {
-	var ojos = 2
+
 	const maxEstamina = 10
-	
 	override method estamina(_estamina) {
 		estamina = _estamina.min(maxEstamina)		
-	}
-	
+	}	
 }
-class Ciclope inherits Empleado {
-	var ojos = 1
-	
+class Ciclope inherits Empleado {	
 	override method experienciaPorDefender(gradoAmenaza) = gradoAmenaza * 2
 	override method fuerza() = super().fuerza() / 2
-	
-}
-
-class Rol {
-	method tieneHerramientasNecesarias(_herramientas) = _herramientas.size() == 0
-	method danioExtra() = 0
-	method defenderVariacionEstamina(estamina) = estamina/2
-	method puedeLimpiar(sectorEsGrande, empleado) = (sectorEsGrande && empleado.estamina() >= 4) || (!sectorEsGrande && empleado.estamina() >= 1)
-	method limpiarVariacionEstamina(esGrande) {
-		if (esGrande) return 4
-		return 1
-	}  
-	
-}
-class Soldado inherits Rol {
-	var arma
-	var practica = 0
-	var danioACausar
-	
-	override method danioExtra() = practica //INterpreto bien la consigna?
-	override method defenderVariacionEstamina(estamina) = estamina
-	 
-	constructor () {
-		//practica = 0
-	}
-}
-class Mucama inherits Rol {
-	method puedeDefender() = false
-	override method puedeLimpiar(sectorEsGrande, empleado) = true 
-}
-class Obrero inherits Rol {
-	var cinturonDeHerramientas = #{} //SET
-	
-	override method tieneHerramientasNecesarias(_herramientas) = _herramientas.all({herramienta => cinturonDeHerramientas.contains(herramienta)})
-	
-	
 }
 
 class Maquina {
@@ -120,6 +81,5 @@ class Maquina {
 		herramientasRequeridas = _herramientas
 	} 
 	method complejidad() = complejidad
-	method herramientasRequeridas() = herramientasRequeridas 
-		
+	method herramientasRequeridas() = herramientasRequeridas 		
 }
