@@ -1,7 +1,15 @@
 // Acá los tests
+import codigo.*
+import frutas.*
 
-test "testX" {
-
-	assert.that(true)
+describe "Punto 1 - Comer fruta" {
+	
+	const kevin = new Empleado(new Soldado(), 0)
+	
+	test "Comer una manzana le da 5 de estamina a Kevin" {
+		kevin.comerFruta(manzana)
+		assert.equals(5, kevin.estamina())	
+	}
+	
 
 }
