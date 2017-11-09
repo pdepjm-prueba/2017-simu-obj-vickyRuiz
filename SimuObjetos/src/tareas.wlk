@@ -1,51 +1,40 @@
-class Tarea {
-	method serEjecutadoPor(empleado) {}
-	method puedeHacerla(empleado) = true
-}
-class ArreglarMaquina inherits Tarea {
+class ArreglarMaquina {
 	var maquina
-	//var empleado
-	constructor (_maquina) {
-		maquina = _maquina
-		//empleado = _empleado
-	}
-	override method puedeHacerla(empleado) = 
-		   empleado.estamina() >= maquina.complejidad() 
-		&& empleado.tieneHerramientas(maquina.herramientasRequeridas())
-	 // && empleado.rol().tieneHerramientasNecesarias(maquina.herramientasRequeridas()) //mal: ROMPE ENCAPSULAMIENTO 
 	
-	override method serEjecutadoPor(empleado){
-		empleado.estamina(empleado.estamina() - maquina.complejidad())
+	constructor(_maquina) {
+		maquina = _maquina
 	}
-	method dificultad(empleado) = maquina.complejidad() * 2
-
-}
-class LimpiarSector inherits Tarea {
-	constructor(esGrande, empleado) {} 
-	method dificultad(empleado) {}
-	/*
-	method limpiarSector(sectorEsGrande) {
-		//dificultadLimpiar = 10
-		if (rol.puedeLimpiar(sectorEsGrande, self)) {
-			self.estamina( estamina - rol.limpiarVariacionEstima(sectorEsGrande))
-			sumatoriaDificultades += dificultadLimpiar
-			tareasRealizadas++
-		} else {
-			//no se puede hacer
-		}		
-	}*/
+	
+	method puedeEjecutarla(empleado) = empleado.estamina() > maquina.complejidad() && empleado.tieneEstasHerramientas(maquina.herramientasRequeridas())
+	method ejecutarla(empleado) {
+		empleado.estamina( empleado.estamina() - maquina.complejidad())
+	}
+	method dificultad(empleado) = maquina.complejidad() * 2	
 }
 
-class DefenderSector inherits Tarea {
+class DefenderSector {
 	var gradoAmenaza
-	constructor(_gradoAmenaza) {
+	
+	constructor (_gradoAmenaza) {
 		gradoAmenaza = _gradoAmenaza
 	}
-	method dificultad(empleado) = empleado.factorDefensa() * gradoAmenaza
-	
-	override method puedeHacerla(empleado) = empleado.puedeDefender() && empleado.fuerza() >= _gradoAmenaza  
-	
-	override method serEjecutadoPor(empleado) {
-		empleado.estamina(empleado.estamina() - empleado.rol().defenderVariacionEstamina(empleado.estamina())) //ENCAPUSLAMINEOT???
+	method puedeEjecutarla(empleado) = empleado.puedeDefender(gradoAmenaza)
+	method ejecutarla(empleado) {
+		empleado.defenderSector(gradoAmenaza)
+	} 
+	method dificultad(empleado) {
+		empleado.dificultadDefender(gradoAmenaza)
 	}
 }
+class LimpiarSector {
+	var esSectorGrande
+	constructor(_esSectorGrande) {
+		esSectorGrande = _esSectorGrande
+	}
+	method puedeEjecutarla(empleado) = empleado.puedeLimpiar(esSectorGrande)
+	method ejecutarla(empleado) {
+		empleado.limpiarSector(esSectorGrande)
+	}
+	method dificultad(empleado) = 10
+}
+

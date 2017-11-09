@@ -1,14 +1,27 @@
-// Acá los tests
-import codigo.*
-import frutas.*
 import roles.*
+import empleados.*
+import tareas.*
+import auxiliares.*
 
-describe "Punto 1 - Comer fruta" { 
+describe "Tests parcial" {
+	const bob = new Ciclope(15, new Mucama())
 	
-	const kevin = new Ciclope(new Soldado(), 0) //Empleado es abstracta!
-	
-	test "Comer una manzana le da 5 de estamina a Kevin" {
-		kevin.comerFruta(manzana)
-		assert.equals(5, kevin.estamina())	
+	test "Punto 1: Bob pasa de 15 a 25 de estamina cuando come una banana" {
+		bob.comerFruta(banana)
+		assert.equals(25, bob.estamina())
+	}
+	test "Punto 2: Bob tiene 28 de experiencia después de realizar 2 tareas, de 10 y 4 puntos de dificultad respectivamente " {
+		bob.ejecutarTarea(new ArreglarMaquina(new Maquina(2, #{})))
+		bob.ejecutarTarea(new LimpiarSector(true))
+		
+		assert.equals(28, bob.experiencia())
+	}
+	test "Punto 3: una mucama no puede defender un sector" {
+		assert.throwsException({bob.ejecutarTarea(new DefenderSector(8))})
 	}
 }
+
+// arreglar una maquina de 2 de complejidad para una mucama suma 4 de exp
+// limpiar: 10 exp
+// 2 tarea
+// 2 * (10 + 4) = 28 
