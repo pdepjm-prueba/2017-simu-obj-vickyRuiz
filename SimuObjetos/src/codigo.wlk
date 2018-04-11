@@ -8,6 +8,8 @@
 import frutas.*
 import roles.* 
 
+//Nuevo comentario - Esto es un cambio!
+
 class Empleado {
 	var rol //soldado, obrero, mucama (puede cambiar)
 	var estamina
