@@ -1,5 +1,7 @@
+//Comentando par ala clase
+//
 //Consejos: leer todo el parcial + anotar relaciones entre cosas en papel + empezar a trabajar en codigo
-//No dejar clases desconectadas en diagrama (ergo en codigo tampoco)
+//No dejar las clases desconectadas en diagrama (ergo en codigo tampoco)
 //los wko se representan, pero no las instancias de clase
 //solo va a haber 3 tests, uno con una excepcion seguramente!
 //No romper encapsulamiento de objetos
